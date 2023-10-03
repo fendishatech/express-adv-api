@@ -1,0 +1,31 @@
+@BASE_URL = http://localhost:5000
+
+###
+GET {{BASE_URL}}/users HTTP/1.1
+Accept: "application/json"
+
+###
+GET {{BASE_URL}}/users/1 HTTP/1.1
+Accept: "application/json"
+
+###
+PUT {{BASE_URL}}/users/1 HTTP/1.1
+Accept: "application/json"
+Content-Type: application/json
+
+ {
+    "name" : "Kidus taye"
+ }
+
+###
+PUT {{BASE_URL}}/users/change-password/1 HTTP/1.1
+Accept: "application/json"
+Content-Type: application/json
+
+ {
+    "password" : "Kidus taye"
+ }
+
+###
+DELETE  {{BASE_URL}}/users/1 HTTP/1.1
+Accept: "application/json"

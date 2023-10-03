@@ -1,0 +1,24 @@
+@BASE_URL = http://localhost:5000
+
+###
+POST {{BASE_URL}}/register HTTP/1.1
+Accept: "application/json"
+Content-Type: application/json
+
+ {
+    "name" : "Kidus taye"
+ }
+
+###
+POST {{BASE_URL}}/login HTTP/1.1
+Accept: "application/json"
+Content-Type: "application/json"
+
+{}
+
+###
+POST {{BASE_URL}}/logout HTTP/1.1
+Accept: "application/json"
+Content-Type: "application/json"
+
+{}

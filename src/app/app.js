@@ -1,4 +1,8 @@
 const express = require("express");
+const cors = require("cors");
+
+// ROUTES
+const indexRoutes = require("./routes/index");
 
 class App {
   constructor() {
@@ -8,18 +12,19 @@ class App {
   }
 
   setMiddleware() {
+    this.app.use(cors());
     this.app.use(express.json());
-    console.log("setting middleware");
-  }
-  setRoutes() {
-    const exampleRoutes = require("./routes/exampleRoutes");
-    this.app.use("/example", exampleRoutes);
-    console.log("Setting routes");
+    this.app.use(express.urlencoded({ extended: true }));
   }
 
-  start() {
-    this.setMiddleware();
-    this.setRoutes();
+  setRoutes() {
+    this.app.use("/", indexRoutes);
+  }
+
+  start(port) {
+    this.app.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+    });
   }
 }
 
