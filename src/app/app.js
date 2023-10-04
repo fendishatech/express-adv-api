@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 
+// DEV
+const sync_models = require("./helpers/syncModels");
 // ROUTES
 const indexRoutes = require("./routes/index");
 
@@ -22,6 +24,7 @@ class App {
   }
 
   start(port) {
+    // sync_models();
     this.app.listen(port, () => {
       console.log(`Server is running on port ${port}`);
     });

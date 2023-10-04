@@ -2,23 +2,28 @@
 
 ###
 POST {{BASE_URL}}/register HTTP/1.1
-Accept: "application/json"
+Accept: application/json
 Content-Type: application/json
 
  {
-    "name" : "Kidus taye"
+    "first_name" : "John",
+      "last_name" : "Snow",
+      "email" : "winterfell@gmail.com",
+      "password" : "nothing",
+      "phone_no" : "0911121315"
  }
 
 ###
 POST {{BASE_URL}}/login HTTP/1.1
-Accept: "application/json"
-Content-Type: "application/json"
+Accept: application/json
+Content-Type: application/json
 
-{}
+{
+   "phone_no" : "0911121315",
+   "password" : "nothing"
+}
 
 ###
 POST {{BASE_URL}}/logout HTTP/1.1
 Accept: "application/json"
 Content-Type: "application/json"
-
-{}

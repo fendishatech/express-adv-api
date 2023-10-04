@@ -27,5 +27,5 @@ Content-Type: application/json
  }
 
 ###
-DELETE  {{BASE_URL}}/users/1 HTTP/1.1
+DELETE  {{BASE_URL}}/users/2 HTTP/1.1
 Accept: "application/json"
