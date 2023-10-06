@@ -1,4 +1,5 @@
 const User = require("../models/user.model");
+const bcrypt = require("bcrypt");
 const { updateUserSchema } = require("../validators/userRequestValidator");
 
 const getUsers = async (req, res) => {
@@ -9,18 +10,24 @@ const getUsers = async (req, res) => {
 const getUser = async (req, res) => {
   const userId = req.params.id;
   const user = await User.findByPk(userId);
-  return res.json({ user: user });
+
+  if (user) {
+    return res.json({ user: user });
+  }
+  return res.json({ message: "User not Found" });
 };
 
 const updateUser = async (req, res) => {
-  const { error } = updateUserSchema.validate(req.body);
+  const { error } = updateUserSchema(req.body);
 
   if (error) {
-    return res.status(400).json({ error: error.details[0].message });
+    const errorMessages = error.details.map((detail) => detail.message);
+    return res.status(400).json({ errors: errorMessages });
   }
 
+  const { first_name, last_name, email, phone_no } = req.body;
+
   const userId = req.params.id;
-  const updatedUserData = req.body;
 
   try {
     const user = await User.findByPk(userId);
@@ -29,14 +36,10 @@ const updateUser = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Update user attributes
-    user.first_name = updatedUserData.first_name;
-    user.last_name = updatedUserData.last_name;
-    user.email = updatedUserData.email;
-    user.phone_no = updatedUserData.phone_no;
-
-    // Save the updated user
-    await user.save();
+    const result = await User.update(
+      { first_name, last_name, email, phone_no },
+      { where: { id: userId }, returning: true }
+    );
 
     return res.json({ message: "User updated successfully" });
   } catch (error) {
@@ -46,6 +49,8 @@ const updateUser = async (req, res) => {
 };
 
 const changePassword = async (req, res) => {
+  // validate with joy
+
   const userId = req.params.id;
   const { currentPassword, newPassword } = req.body;
 

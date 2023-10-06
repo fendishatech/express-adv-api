@@ -5,25 +5,37 @@ GET {{BASE_URL}}/users HTTP/1.1
 Accept: "application/json"
 
 ###
-GET {{BASE_URL}}/users/1 HTTP/1.1
+GET {{BASE_URL}}/users/4 HTTP/1.1
 Accept: "application/json"
 
 ###
-PUT {{BASE_URL}}/users/1 HTTP/1.1
+PATCH {{BASE_URL}}/users/4 HTTP/1.1
 Accept: "application/json"
 Content-Type: application/json
 
  {
-    "name" : "Kidus taye"
+    "first_name" : "Tim",
+    "email" : "snow@winterfell.com"
  }
 
 ###
-PUT {{BASE_URL}}/users/change-password/1 HTTP/1.1
+PUT {{BASE_URL}}/users/4 HTTP/1.1
 Accept: "application/json"
 Content-Type: application/json
 
  {
-    "password" : "Kidus taye"
+    "first_name" : "Tim",
+    "email" : "snow@winterfell.com"
+ }
+
+###
+PUT {{BASE_URL}}/users/change-password/4 HTTP/1.1
+Accept: "application/json"
+Content-Type: application/json
+
+ {
+    "currentPassword" : "nothing",
+    "newPassword" : "password"
  }
 
 ###

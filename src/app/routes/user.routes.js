@@ -11,6 +11,7 @@ router.get("/", getUsers);
 
 router.get("/:id", getUser);
 
+router.patch("/:id", updateUser);
 router.put("/:id", updateUser);
 
 router.put("/change-password/:id", changePassword);
