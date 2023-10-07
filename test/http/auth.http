@@ -8,9 +8,9 @@ Content-Type: application/json
  {
     "first_name" : "John",
       "last_name" : "Snow",
-      "email" : "winterfell@gmail.com",
+      "email" : "winterfelldown@gmail.com",
       "password" : "nothing",
-      "phone_no" : "0911121315"
+      "phone_no" : "0911121316"
  }
 
 ###

@@ -1,10 +1,11 @@
 const express = require("express");
 const cors = require("cors");
-
+const swaggerUi = require("swagger-ui-express");
 // DEV
 const sync_models = require("./helpers/syncModels");
 // ROUTES
-const indexRoutes = require("./routes/index");
+const routes = require("./routes/index");
+const swaggerMiddleware = require("./middleware/swaggerUi");
 
 class App {
   constructor() {
@@ -20,7 +21,8 @@ class App {
   }
 
   setRoutes() {
-    this.app.use("/", indexRoutes);
+    this.app.use("/api/", routes);
+    this.app.use("/api-doc", swaggerUi.serve, swaggerMiddleware);
   }
 
   start(port) {

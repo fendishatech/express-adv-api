@@ -2,8 +2,15 @@ const { Op } = require("sequelize");
 const bcrypt = require("bcrypt");
 const User = require("../models/user.model");
 const { createUserSchema } = require("../validators/userRequestValidator");
+const createMulterUpload = require("../middleware/multerConfig");
+// Define the file path for disk storage
+const uploadPath = ".public/images/users/";
+
+// Create the Multer upload function with the specified storage path
+const upload = createMulterUpload(uploadPath);
 
 const register = async (req, res) => {
+  // Validation
   const { error } = createUserSchema(req.body);
 
   if (error) {
@@ -26,6 +33,23 @@ const register = async (req, res) => {
         .status(400)
         .json({ message: "Email or phone number already in use" });
     }
+
+    let avatarPath = "";
+
+    if (req.body.avatar) {
+      // If the "avatar" field exists, upload the avatar
+      upload.single("avatar")(req, res, (err) => {
+        if (err) {
+          // Handle Multer upload error
+          return res.status(400).json({ error: err.message });
+        }
+        // Access uploaded file information via req.file
+        avatarPath = req.file.path;
+      });
+    } else {
+      avatarPath = "/public/images/users/default.png";
+    }
+
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10); // You can adjust the salt rounds (e.g., 10) as needed
 
@@ -35,14 +59,18 @@ const register = async (req, res) => {
       last_name,
       email,
       password: hashedPassword,
+      avatar: avatarPath,
       phone_no,
     });
 
-    // You can also generate and send an access token for auto-login if desired
+    if (newUser) {
+      // You can also generate and send an access token for auto-login if desired
 
-    res.status(201).json({ message: "Registration successful" });
+      res.status(201).json({ message: "Registration successful" });
+    } else {
+      res.status(500).json({ message: "Something went wrong saving user." });
+    }
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };

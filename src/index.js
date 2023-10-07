@@ -1,6 +1,6 @@
-const App = require("./app/app");
+const Server = require("./app/server");
 
-const app = new App();
+const app = new Server();
 
 const PORT = 5000;
 app.start(PORT);
