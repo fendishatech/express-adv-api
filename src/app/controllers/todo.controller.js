@@ -1,4 +1,5 @@
 const Todo = require("../models/todo.model");
+const Task = require("../models/task.model");
 const {
   createTodoSchema,
   updateTodoSchema,
@@ -33,7 +34,9 @@ const createTodo = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    const todos = await Todo.findAll();
+    const todos = await Todo.findAll({
+      include: Task,
+    });
 
     if (todos.length === 0) {
       return res.status(200).json({ message: "No records yet." });
@@ -50,7 +53,9 @@ const getTodo = async (req, res) => {
   const todoId = req.params.id;
 
   try {
-    const todo = await Todo.findByPk(todoId);
+    const todo = await Todo.findByPk(todoId, {
+      include: Task,
+    });
 
     if (!todo) {
       return res
