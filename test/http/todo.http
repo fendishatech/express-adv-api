@@ -11,20 +11,21 @@ GET {{BASE_URL}}/todos/1 HTTP/1.1
 # POST (CREATE)
 ###
 POST {{BASE_URL}}/todos/ HTTP/1.1
-Content-Type: application/json;
+Content-Type: application/json
 
 {
-    "title": "My first todo",
+    "title": "My second todo",
+    "description" : "testing the second description"
 }
 
 
 # patch (UPDATE)
 ###
 PATCH {{BASE_URL}}/todos/1 HTTP/1.1
-Content-Type: application/json;
+Content-Type: application/json
 
 {
-    "title": "My first todo",
+    "title": "My first Todo"
 }
 
 # DELETE

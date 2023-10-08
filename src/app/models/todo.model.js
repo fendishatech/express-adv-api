@@ -9,6 +9,7 @@ const Todo = sequelize.define(
     title: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     description: {
       type: DataTypes.STRING,
@@ -17,6 +18,7 @@ const Todo = sequelize.define(
     completed: {
       type: DataTypes.BOOLEAN,
       allowNull: true,
+      defaultValue: false,
     },
   },
   {
