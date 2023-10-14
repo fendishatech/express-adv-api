@@ -125,27 +125,27 @@ const filterTodo = async (req, res) => {
 
 const searchTodo = async (req, res) => {
   try {
-    const { title, description, completed } = req.query;
-
-    const filter = {};
-
-    if (title) {
-      filter.title = { [Op.like]: `%${title}%` };
-    }
-    if (description) {
-      filter.description = { [Op.like]: `%${description}%` };
-    }
-    if (completed) {
-      filter.completed = completed === "true";
-    }
+    const { q } = req.query;
 
     const todos = await Todo.findAll({
-      where: filter,
+      where: {
+        [Op.or]: [
+          {
+            title: {
+              [Op.like]: `%${q}%`,
+            },
+          },
+          {
+            description: {
+              [Op.like]: `%${q}%`,
+            },
+          },
+        ],
+      },
     });
 
     return res.json({
-      message: "inside filtering controller",
-      filter,
+      message: "inside searching controller",
       todos,
     });
   } catch (error) {
