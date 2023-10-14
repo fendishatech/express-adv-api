@@ -1,6 +1,8 @@
 const router = require("express").Router();
 const {
   getAll,
+  filterTodo,
+  searchTodo,
   getTodo,
   createTodo,
   updateTodo,
@@ -8,6 +10,10 @@ const {
 } = require("../controllers/todo.controller");
 
 router.get("/", getAll);
+
+router.get("/filter", filterTodo);
+
+router.get("/search", searchTodo);
 
 router.get("/:id", getTodo);
 

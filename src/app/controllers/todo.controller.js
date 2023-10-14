@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const Todo = require("../models/todo.model");
 const Task = require("../models/task.model");
 const {
@@ -34,18 +35,121 @@ const createTodo = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
+    let { page, limit } = req.query;
+    let offset = 0;
+
+    if (!limit || isNaN(limit) || limit <= 0) {
+      limit = 3;
+    }
+
+    const totalTodos = await Todo.count();
+    const totalPages = Math.ceil(totalTodos / limit);
+
+    if (!page || isNaN(page) || page <= 0) {
+      page = 1;
+    } else if (page > totalPages) {
+      page = totalPages;
+    }
+
+    offset = (page - 1) * limit;
+
     const todos = await Todo.findAll({
       include: Task,
+      limit: parseInt(limit),
+      offset: parseInt(offset),
     });
 
     if (todos.length === 0) {
       return res.status(200).json({ message: "No records yet." });
     }
 
-    return res.status(200).json(todos);
+    const currentPage = parseInt(page);
+    const currentCount = todos.length;
+
+    // const hasNextPage = currentPage < totalPages;
+    // const hasPreviousPage = currentPage > totalPages;
+
+    // const baseUrl = req.protocol + "://" + req.get("host") + req.originalUrl;
+    // const previousPageUrl = hasPreviousPage
+    //   ? `${baseUrl}&page=${currentPage - 1}`
+    //   : null;
+    // const nextPageUrl = hasNextPage
+    //   ? `${baseUrl}&page=${currentPage + 1}`
+    //   : null;
+
+    return res.status(200).json({
+      data: todos,
+      pagination: {
+        currentPage,
+        todosPerPage: limit,
+        totalTodos,
+        currentCount,
+        totalPages,
+        // previousPageUrl,
+        // nextPageUrl,
+      },
+    });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+const filterTodo = async (req, res) => {
+  try {
+    const { title, description, completed } = req.query;
+
+    const filter = {};
+
+    if (title) {
+      filter.title = { [Op.like]: `%${title}%` };
+    }
+    if (description) {
+      filter.description = { [Op.like]: `%${description}%` };
+    }
+    if (completed) {
+      filter.completed = completed === "true";
+    }
+
+    const todos = await Todo.findAll({
+      where: filter,
+    });
+
+    return res.json({
+      todos,
+    });
+  } catch (error) {
+    console.log("Error", error.message);
+  }
+};
+
+const searchTodo = async (req, res) => {
+  try {
+    const { title, description, completed } = req.query;
+
+    const filter = {};
+
+    if (title) {
+      filter.title = { [Op.like]: `%${title}%` };
+    }
+    if (description) {
+      filter.description = { [Op.like]: `%${description}%` };
+    }
+    if (completed) {
+      filter.completed = completed === "true";
+    }
+
+    const todos = await Todo.findAll({
+      where: filter,
+    });
+
+    return res.json({
+      message: "inside filtering controller",
+      filter,
+      todos,
+    });
+  } catch (error) {
+    console.log("Error", error.message);
   }
 };
 
@@ -123,6 +227,8 @@ const deleteTodo = async (req, res) => {
 module.exports = {
   getAll,
   getTodo,
+  filterTodo,
+  searchTodo,
   createTodo,
   updateTodo,
   deleteTodo,
